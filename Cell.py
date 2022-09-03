@@ -1,88 +1,107 @@
+import pygame
+import time
 import random
+from Constants import Constants 
 
 
-class Cell:
+class Cell(Constants):
 
-    def __init__(self, x_coord, y_coord):
+    def __init__(self, cols, rows):
         
-        self.x_coord = x_coord
-        self.y_coord = y_coord
+        Constants.__init__(self)
+        
+        self.x_coord = cols
+        self.y_coord = rows
+        self.tile = self.get_tile()
+        self.screen = pygame.display.get_surface()
+
+        self.x_len = self.x_coord * self.tile
+        self.y_len = self.y_coord * self.tile
+        
+        self.walls = {"north": True, "south": True, "east": True,  "west": True}
         self.visited = False
-        self.walls = {"left": True, "right": True, "up": True, "down": True}
-
-    def validateAdj(self, grid, x_len, y_len, x_coord, y_coord): #makes sure a cell is in the grid
-
-        findIndex = lambda x_coord, y_coord: (x_coord + y_coord) * y_len
-
-        if (x_coord < 0) or (x_coord > y_len - 1) or (y_coord < 0) or (y_coord > x_len - 1):
-            return False
-
-        print(x_coord, y_coord)
         
-        return grid[findIndex(x_coord, y_coord)]
-
-    def nextCell(self, grid, x_len, y_len):
-
-        self.grid = grid
-        adjacent_cells = list()
-        left = self.validateAdj(grid, x_len, y_len, self.x_coord - 1, self.y_coord)
-        right = self.validateAdj(grid, x_len, y_len, self.x_coord + 1, self.y_coord)
-        up = self.validateAdj(grid, x_len, y_len, self.x_coord, self.y_coord - 1)
-        down = self.validateAdj(grid, x_len, y_len, self.x_coord, self.y_coord + 1)
-
-        if left and not left.visited:
-            adjacent_cells.append(left)
-        if right and not right.visited:
-            adjacent_cells.append(right)
-        if up and not up.visited:
-            adjacent_cells.append(up)
-        if down and not down.visited:
-            adjacent_cells.append(down)
-
-        if adjacent_cells:
-            return random.choice(adjacent_cells)
-        else:
-            return False #there are no adjacent cells, dead end
-
-
-def removeWalls(current_cell, adjacent_cell):
-    pass
-        
-
-def iterativeDFS(initialCell, stack, grid, x_len, y_len): #the standard algorithm
     
-    initial_cell.visited = True
-    stack.append(initial_cell)
+    def draw(self):
+    
+        if self.visited == True:
+            pygame.draw.rect(self.screen, pygame.Color(0,0,0), (self.x_len, self.y_len, self.tile, self.tile))
 
-    while len(stack) != 0:
-        print("while")
-        print(stack)
-        current_cell = stack.pop()
+        #draws in walls that the cell has left
+        if self.walls["north"]:
+            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len, self.y_len), (self.x_len + self.tile, self.y_len), 2)
+        if self.walls["east"]:
+            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len + self.tile, self.y_len), (self.x_len + self.tile, self.y_len + self.tile), 2)
+        if self.walls["south"]:
+            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len + self.tile, self.y_len + self.tile), (self.x_len, self.y_len + self.tile), 2)
+        if self.walls["west"]:
+            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len, self.y_len + self.tile), (self.x_len, self.y_len), 2)
+
+
+    def mark_cell(self):
         
-        if current_cell.nextCell(grid, x_len, y_len) != False:
-            print("if 1")
-            stack.append(current_cell)
-            next_cell = current_cell.nextCell(grid, x_len, y_len)
+        pygame.draw.rect(self.screen, pygame.Color(253,253,150), (self.x_len + 2, self.y_len + 2, self.tile - 2, self.tile - 2))
 
-            if next_cell:
-                print("if 2")
-                #current_cell.removeWalls(current_cell, next_cell)
-                next_cell.visited = True
-                stack.append(next_cell)
-                
 
-x_len = 5
-y_len = 5
+    def check_valid(self, grid, x_coord, y_coord): #makes sure a given cell is in the grid
 
-grid = list()
-for row in range(x_len):
-    for column in range(y_len):
-        new_cell = Cell(column, row)
-        grid.append(new_cell)
+        cols = self.get_cols()
+        rows = self.get_rows()
+        find_index = lambda x_coord, y_coord: (x_coord + y_coord) * cols
+
+        if (x_coord < 0) or (x_coord > cols - 1) or (y_coord < 0) or (y_coord > rows - 1):
+            return False
         
-initial_cell = grid[0]
-stack = list() #stack
-iterativeDFS(initial_cell, stack, grid, x_len, y_len)
-print("done")
-            
+        return grid[find_index(x_coord, y_coord)]
+    
+
+    def get_neighbours(self, grid):
+
+        neighbours = []
+        north = self.check_valid(grid, self.x_coord, self.y_coord - 1)
+        east = self.check_valid(grid, self.x_coord + 1, self.y_coord)
+        south = self.check_valid(grid, self.x_coord, self.y_coord + 1)
+        west = self.check_valid(grid, self.x_coord - 1, self.y_coord)
+
+        if north and not north.visited:
+            neighbours.append(north)
+        if east and not east.visited:
+            neighbours.append(east)
+        if south and not south.visited:
+            neighbours.append(south)
+        if west and not west.visited:
+            neighbours.append(west)
+
+        return neighbours
+    
+    
+    def get_next(self, grid):
+        
+        if self.has_unvisited_neighbours(grid):
+            return random.choice(self.get_neighbours(grid))
+        
+
+    def has_unvisited_neighbours(self, grid):
+
+        if len(self.get_neighbours(grid)) != 0:
+            return True
+    
+
+    def remove_wall(self, current_cell, chosen_cell):
+        
+        x_diff = current_cell.x_coord - chosen_cell.x_coord
+        if x_diff == 1:
+            current_cell.walls["west"] = False
+            chosen_cell.walls["east"] = False
+        elif x_diff == -1:
+            current_cell.walls["east"] = False
+            chosen_cell.walls["west"] = False
+
+        y_diff = current_cell.y_coord - chosen_cell.y_coord
+        if y_diff == 1:
+            current_cell.walls["north"] = False
+            chosen_cell.walls["south"] = False
+        elif y_diff == -1:
+            current_cell.walls["south"] = False
+            chosen_cell.walls["north"] = False
 
