@@ -8,6 +8,10 @@ class Constants:
         self.resolution = self.width, self.height = 600,600
         self.cols = self.width // self.tile
         self.rows = self.height // self.tile
+        
+        self.wall_colour = (230,230,250)
+        self.highlight_colour = (253,253,150)
+        self.background_colour = (0,0,0)
 
     def get_tile(self):
         return self.tile
@@ -26,3 +30,12 @@ class Constants:
 
     def get_rows(self):
         return self.rows
+    
+    def get_wall_colour(self):
+        return self.wall_colour
+
+    def get_highlight_colour(self):
+        return self.highlight_colour
+
+    def get_background_colour(self):
+        return self.background_colour
