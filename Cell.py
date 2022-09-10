@@ -25,25 +25,25 @@ class Cell(Constants):
     def draw(self):
     
         if self.visited == True:
-            pygame.draw.rect(self.screen, pygame.Color(0,0,0), (self.x_len, self.y_len, self.tile, self.tile))
+            pygame.draw.rect(self.screen, pygame.Color(self.get_background_colour()), (self.x_len, self.y_len, self.tile, self.tile))
 
        if self.is_start_cell or self.is_end_cell:
             self.mark_cell(self)
 
         #draws in walls that the cell has left
         if self.walls["north"]:
-            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len, self.y_len), (self.x_len + self.tile, self.y_len), 2)
+            pygame.draw.line(self.screen, pygame.Color(self.get_wall_colour()), (self.x_len, self.y_len), (self.x_len + self.tile, self.y_len), 2)
         if self.walls["south"]:
-            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len + self.tile, self.y_len + self.tile), (self.x_len, self.y_len + self.tile), 2)
+            pygame.draw.line(self.screen, pygame.Color(self.get_wall_colour()), (self.x_len + self.tile, self.y_len + self.tile), (self.x_len, self.y_len + self.tile), 2)
         if self.walls["east"]:
-            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len + self.tile, self.y_len), (self.x_len + self.tile, self.y_len + self.tile), 2)
+            pygame.draw.line(self.screen, pygame.Color(self.get_wall_colour()), (self.x_len + self.tile, self.y_len), (self.x_len + self.tile, self.y_len + self.tile), 2)
         if self.walls["west"]:
-            pygame.draw.line(self.screen, pygame.Color(230,230,250), (self.x_len, self.y_len + self.tile), (self.x_len, self.y_len), 2)
+            pygame.draw.line(self.screen, pygame.Color(self.get_wall_colour()), (self.x_len, self.y_len + self.tile), (self.x_len, self.y_len), 2)
 
 
     def mark_cell(self):
         
-        pygame.draw.rect(self.screen, pygame.Color(253,253,150), (self.x_len + 2, self.y_len + 2, self.tile - 2, self.tile - 2))
+        pygame.draw.rect(self.screen, pygame.Color(self.get_highlight_colour()), (self.x_len + 2, self.y_len + 2, self.tile - 2, self.tile - 2))
         
         
     def check_valid(self, grid, x_coord, y_coord): #makes sure a given cell is in the grid
