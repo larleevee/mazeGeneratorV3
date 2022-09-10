@@ -1,8 +1,8 @@
 import pygame
-import time
 import random
 from Constants import Constants
 from Cell import Cell
+from Grid import Grid
 
 
 def mainCode():
@@ -11,34 +11,40 @@ def mainCode():
     pygame.init()
     screen = pygame.display.set_mode(constants.get_resolution())
     clock = pygame.time.Clock()
-    grid = [Cell(col, row) for row in range (constants.get_rows()) for col in range (constants.get_cols())]
-    current_cell = grid[0]
+    grid = Grid()
+    grid.construct_grid()
+    maze = grid.maze
+    current_cell = grid.current_cell
 
     while True:
-        screen.fill(pygame.Color(215,210,203))
+        screen.fill(pygame.Color(230,230,250))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
 
-        dfs(grid, current_cell)
+        dfs(maze, clock, grid.current_cell)
+        # current_cell.mark_as_start()
+        # grid[len(grid)-1].mark_as_end()
 
         pygame.display.flip()
-        clock.tick(300)
+        clock.tick(60)
 
 
-def dfs(grid, current_cell):
+def dfs(maze, clock, current_cell):
     
-    [cell.draw() for cell in grid]
+    [cell.draw() for cell in maze]
 
     current_cell.visited = True
     current_cell.mark_cell()
 
-    while current_cell.has_unvisited_neighbours(grid):
-        chosen_cell = current_cell.get_next(grid)
+    while current_cell.has_unvisited_neighbours(maze):
+        chosen_cell = current_cell.get_next(maze)
         current_cell.remove_wall(current_cell, chosen_cell)
-
-        dfs(grid, chosen_cell)
+        pygame.display.flip()
+        clock.tick(40) #fps
+        
+        dfs(maze, clock, chosen_cell)
 
     
         
