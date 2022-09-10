@@ -17,7 +17,7 @@ def mainCode():
     current_cell = grid.current_cell
 
     while True:
-        screen.fill(pygame.Color(230,230,250))
+        screen.fill(constants.get_wall_colour())
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
