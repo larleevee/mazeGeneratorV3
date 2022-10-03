@@ -1,41 +1,55 @@
 
 
-class Constants:
+class Constants(object):
 
     def __init__(self):
         
-        self.tile = 30
-        self.resolution = self.width, self.height = 600,600
-        self.cols = self.width // self.tile
-        self.rows = self.height // self.tile
-        
-        self.wall_colour = (230,230,250)
-        self.highlight_colour = (253,253,150)
-        self.background_colour = (0,0,0)
+        self._tile = 40
+        self._resolution = self._width, self._height = 600,600
+        self._cols = self._width // self._tile
+        self._rows = self._height // self._tile
 
-    def get_tile(self):
-        return self.tile
+        self._wall_colour = (230,230,250)
+        self._highlight_colour = (253,253,150)
+        self._background_colour = (0,0,0)
 
-    def get_resolution(self):
-        return self.resolution
+    def get_tile(self) -> int: #getter method
+        return self._tile
 
-    def get_width(self):
-        return self.width
+    def get_resolution(self) -> tuple: #getter method
+        return self._resolution
 
-    def get_height(self):
-        return self.height
+    def get_width(self) -> int: #getter method
+        return self._width
 
-    def get_cols(self):
-        return self.cols
+    def get_height(self) -> int: #getter method
+        return self._height
 
-    def get_rows(self):
-        return self.rows
-    
-    def get_wall_colour(self):
-        return self.wall_colour
+    def get_cols(self) -> int: #getter method
+        return self._cols
 
-    def get_highlight_colour(self):
-        return self.highlight_colour
+    def get_rows(self) -> int: #getter method
+        return self._rows
 
-    def get_background_colour(self):
-        return self.background_colour
+    def get_wall_colour(self) -> tuple: #getter method
+        return self._wall_colour
+
+    def get_highlight_colour(self) -> tuple: #getter method
+        return self._highlight_colour
+
+    def get_background_colour(self) -> tuple: #getter method
+        return self._background_colour
+
+    def set_tile(self, tile_width) -> None: #setter method
+        self._tile = tile_width
+        self._cols = self._width // self._tile
+        self._rows = self._height // self._tile
+
+    def set_wall_colour(self, colour) -> None: #setter method
+        self._wall_colour = colour
+
+    def set_highlight_colour(self, colour) -> None: #setter method
+        self._highlight_colour = colour
+
+    def set_background_colour(self, colour) -> None: #setter method
+        self._background_colour = colour
