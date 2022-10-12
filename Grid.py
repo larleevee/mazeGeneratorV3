@@ -16,3 +16,6 @@ class Grid(Constants):
         
         self.maze = [Cell(col, row) for row in range (self.rows) for col in range (self.cols)]
         self.current_cell = self.maze[0]
+
+    def display_grid(self):
+        [cell.draw() for cell in self.maze]
