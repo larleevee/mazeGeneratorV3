@@ -4,13 +4,13 @@ class Constants(object):
 
     def __init__(self):
         
-        self._tile = 40
+        self._tile = 30
         self._resolution = self._width, self._height = 600,600
         self._cols = self._width // self._tile
         self._rows = self._height // self._tile
 
-        self._wall_colour = (230,230,250)
-        self._highlight_colour = (253,253,150)
+        self._wall_colour = (253, 253, 178)
+        self._highlight_colour = (230,230,250)
         self._background_colour = (0,0,0)
 
     def get_tile(self) -> int: #getter method
@@ -40,8 +40,10 @@ class Constants(object):
     def get_background_colour(self) -> tuple: #getter method
         return self._background_colour
 
-    def set_tile(self, tile_width) -> None: #setter method
-        self._tile = tile_width
+    def set_tile(self, tile) -> None: #setter method
+
+        self._tile = tile
+        self._resolution = self._width, self._height = 600,600
         self._cols = self._width // self._tile
         self._rows = self._height // self._tile
 
@@ -53,3 +55,8 @@ class Constants(object):
 
     def set_background_colour(self, colour) -> None: #setter method
         self._background_colour = colour
+
+constants = Constants()
+
+def get_constants():
+    return constants

@@ -1,21 +1,26 @@
 from Constants import Constants
 from Cell import Cell
 
-
-class Grid(Constants):
+class Grid():
     
-    def __init__(self):
+    def __init__(self, constants):
         
-        Constants.__init__(self)
-        self.cols = self.get_cols()
-        self.rows = self.get_rows()
+        self.constants = constants
+        self.cols = self.constants.get_cols()
+        self.rows = self.constants.get_rows()
         self.maze = []
         self.current_cell = None
 
     def construct_grid(self):
+        """
+        Initialise the 1D grid array
+        """
         
-        self.maze = [Cell(col, row) for row in range (self.rows) for col in range (self.cols)]
+        self.maze = [Cell(col, row, self.constants) for row in range (self.rows) for col in range (self.cols)]
         self.current_cell = self.maze[0]
 
     def display_grid(self):
-        [cell.draw() for cell in self.maze]
+        """
+        Draws each Cell object in the pygame window
+        """
+        [cell.draw(self.constants) for cell in self.maze]
